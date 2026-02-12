@@ -52,6 +52,7 @@ services:
     environment:
       - MONGODB_URL=mongodb://mongodb:27017
       - DATABASE_NAME=data
+      - COLLECTION_NAME=suspicious_customers_orders
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_CLIENT_ID=backend-service
     depends_on:
