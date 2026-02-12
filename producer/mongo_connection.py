@@ -16,13 +16,7 @@ class DBConnection:
         return collection
 
 
-class DBCrud:
-    _collection = DBConnection.get_collection()
 
-    @staticmethod
-    def get_all_data(top):
-        DBCrud._collection.find(top)
-        print("Data inserted.")
 
 
 
