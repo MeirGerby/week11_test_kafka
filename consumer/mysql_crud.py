@@ -6,6 +6,6 @@ def send_data(data):
     if connection:
         cursor = connection.cursor(dictionary=True)
         cursor.execute(query)
-        return cursor.fetchall() # type: ignore
+
     else:
         return f"can't create the cursor" # type: ignore 

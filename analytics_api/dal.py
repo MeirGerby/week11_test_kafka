@@ -1,12 +1,24 @@
+from connection import connection
 
-def root():
-    return {"message": "Hello World"}
 
 def top_costumers():
-    return {"message": "Hello World"}
+    query = "" 
+
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute(query)
 
 def customers_without_orders():
-    return {"message": "Hello World"}
+    query = "" 
+
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute(query)
+
 
 def zero_credit_active_customers():
-    return {"message": "Hello World"}
+    query = "" 
+
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute(query)
