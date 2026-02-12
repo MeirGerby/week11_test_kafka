@@ -12,10 +12,10 @@ def get_db_connection():
     """
     try:
         connection = mysql.connector.connect(
-            MYSQL_HOST='mysql'
-            MYSQL_PORT=3306
-            MYSQL_USER='analytics'
-            MYSQL_PASSWORD='analytics123'
+            MYSQL_HOST='mysql',
+            MYSQL_PORT=3306,
+            MYSQL_USER='analytics',
+            MYSQL_PASSWORD='analytics123',
             MYSQL_DATABASE='analytics'
             )
         return connection
