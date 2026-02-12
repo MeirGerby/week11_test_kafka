@@ -43,7 +43,7 @@ services:
 
   app:
     build:
-      context: ./apps/mongo_backend
+      context: ./analytics_api
       dockerfile: Dockerfile
     container_name: analytics_api
     restart: unless-stopped
@@ -88,7 +88,7 @@ services:
   # MySQL Analytics Service (Kafka Consumer)
   mysql-service:
     build:
-      context: ./apps/mysql_server
+      context: ./consumer
       dockerfile: Dockerfile
     container_name: mysql_service
     restart: unless-stopped
@@ -109,8 +109,7 @@ services:
     networks:
       - pipeline_network
     volumes:
-      - ./apps/mysql_server:/app
-      - ./shared:/app/shared
+      - ./consumer:/app
 
 networks:
   pipeline_network:
