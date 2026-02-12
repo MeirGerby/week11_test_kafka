@@ -115,19 +115,19 @@ services:
     build:
       context: ./producer
       dockerfile: Dockerfile
-    container_name: mysql_service
+    container_name: producer
     restart: unless-stopped
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - KAFKA_CLIENT_ID=mysql-service
-      - KAFKA_GROUP_ID=mysql-analytics-service
-      - MYSQL_HOST=mysql
-      - MYSQL_PORT=3306
-      - MYSQL_USER=analytics
-      - MYSQL_PASSWORD=analytics123
-      - MYSQL_DATABASE=analytics
+      - KAFKA_CLIENT_ID=producer
+      - KAFKA_GROUP_ID=analytics-service
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_USER=analytics
+      - MONGO_PASSWORD=analytics123
+      - MONGO_DATABASE=analytics
     depends_on:
-      mysql:
+      mongodb:
         condition: service_healthy
       kafka:
         condition: service_started
@@ -138,3 +138,13 @@ services:
 
 networks:
   pipeline_network:
+    driver: bridge 
+
+volumes:
+  mongodb_data:
+    driver: local
+  kafka_data:
+    driver: local
+  mysql_data:
+    driver: local
+
