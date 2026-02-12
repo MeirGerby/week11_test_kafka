@@ -1,25 +1,25 @@
 services:
   mongodb:
     image: mongo:latest
-    container_name: social_commerce_mongodb
+    container_name: mongodb
     restart: unless-stopped
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: social_commerce
+      MONGO_INITDB_DATABASE: data
     volumes:
       - mongodb_data:/data/db
     networks:
-      - social_commerce_network
+      - pipeline_network
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/social_commerce --quiet
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/data --quiet
       interval: 60s
       timeout: 5s
       retries: 5
 
   kafka:
     image: confluentinc/cp-kafka:7.6.0
-    container_name: social_commerce_kafka
+    container_name: kafka
     restart: unless-stopped
     ports:
       - "9092:9092"
@@ -39,34 +39,34 @@ services:
     volumes:
       - kafka_data:/var/lib/kafka/data
     networks:
-      - social_commerce_network
+      - pipeline_network
 
   app:
     build:
       context: ./apps/mongo_backend
       dockerfile: Dockerfile
-    container_name: social_commerce_app
+    container_name: analytics_api
     restart: unless-stopped
     ports:
       - "8000:8000"
     environment:
       - MONGODB_URL=mongodb://mongodb:27017
-      - DATABASE_NAME=social_commerce
+      - DATABASE_NAME=data
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_CLIENT_ID=backend-service
     depends_on:
       - mongodb
       - kafka
     networks:
-      - social_commerce_network
+      - pipeline_network
     volumes:
-      - ./apps/mongo_backend:/app
-      - ./shared:/app/shared
+      - ./analytics_api:/app
+
 
   # MySQL database (Analytics)
   mysql:
     image: mysql:8.0
-    container_name: social_commerce_mysql
+    container_name: mysql
     restart: unless-stopped
     ports:
       - "3306:3306"
@@ -78,7 +78,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - social_commerce_network
+      - pipeline_network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 90s
@@ -90,7 +90,7 @@ services:
     build:
       context: ./apps/mysql_server
       dockerfile: Dockerfile
-    container_name: social_commerce_mysql_service
+    container_name: mysql_service
     restart: unless-stopped
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
@@ -107,13 +107,13 @@ services:
       kafka:
         condition: service_started
     networks:
-      - social_commerce_network
+      - pipeline_network
     volumes:
       - ./apps/mysql_server:/app
       - ./shared:/app/shared
 
 networks:
-  social_commerce_network:
+  pipeline_network:
     driver: bridge
 
 volumes:
