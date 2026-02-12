@@ -108,7 +108,7 @@ services:
         condition: service_started
     networks:
       - pipeline_network
-       volumes:
+    volumes:
       - ./consumer:/app 
   
   producer:
@@ -134,7 +134,7 @@ services:
     networks:
       - pipeline_network
     volumes:
-      - ./consumer:/app
+      - ./producer:/app
 
 networks:
   pipeline_network:
