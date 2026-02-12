@@ -43,7 +43,7 @@ services:
 
   app:
     build:
-      context: ./analytics_api
+      context: ./analytics_api/
       dockerfile: Dockerfile
     container_name: analytics_api
     restart: unless-stopped
@@ -89,6 +89,31 @@ services:
   mysql-service:
     build:
       context: ./consumer
+      dockerfile: Dockerfile
+    container_name: mysql_service
+    restart: unless-stopped
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KAFKA_CLIENT_ID=mysql-service
+      - KAFKA_GROUP_ID=mysql-analytics-service
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=analytics
+      - MYSQL_PASSWORD=analytics123
+      - MYSQL_DATABASE=analytics
+    depends_on:
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    networks:
+      - pipeline_network
+    volumes:
+      - ./consumer:/app 
+  
+  producer:
+    build:
+      context: ./producer
       dockerfile: Dockerfile
     container_name: mysql_service
     restart: unless-stopped
